@@ -4,7 +4,7 @@ const Direction = {
 }
 
 class Ship {
-  direction = Direction.HORIZONTAL
+  
   constructor() {
     if (this.constructor === Ship) {
       throw new TypeError('Abstract class "Ship" cannot be instantiated directly.'); 
@@ -17,9 +17,11 @@ class Ship {
     if (this.getSymbol === undefined) {
       throw new TypeError('Classes extending the Ship abstract class');
     }
-    
+
     this.life = this.size();
     // this.name = name;
+    this.direction = Direction.HORIZONTAL;
+    this.isPlace = false;
   }
 
   hit(){
@@ -29,11 +31,6 @@ class Ship {
   setPosition({row, col}){
     this.row,
     this.col
-  }
-
-  constructor(name){
-    this.life = this.size();
-    this.name = name;
   }
 }
 
