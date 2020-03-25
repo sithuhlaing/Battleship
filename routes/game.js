@@ -1,19 +1,35 @@
 import express from 'express';
+
 import { PlayerBoard } from '../game/board';
 import { Coordinate } from '../game/geomatics';
+import { connect, getDB } from "../db";
+import 'dotenv/config';
 
 const router = express.Router();
 const id = '3-0250-86008-64-1';
 const board = new PlayerBoard();
+const collection = 'board';
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  res.send('hey good news');
 });
 
 router.post('/new', function(req, res, next) {
-  res.json({gameId: id});
-  // res.json(board);
+  connect((err) => {
+    if(err)
+      next(err);
+    else
+      getDB().collection(collection).find({}).toArray((err, docs) => {
+        if(err)
+          next(err);
+        else {
+          console.log(docs);
+          res.json(docs);
+        }
+      });
+  });
 });
 
 router.post('/:gameId/placement', function(req, res, next) {
