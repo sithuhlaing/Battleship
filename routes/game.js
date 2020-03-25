@@ -17,10 +17,8 @@ router.post('/new', function(req, res, next) {
 });
 
 router.post('/:gameId/placement', function(req, res, next) {
-  // let { gameId, coordinate:{row, col}, ship} = req.params ;
   if(id === req.params.gameId) {
     const {coordinate:{row, col}, ship, direction} = req.body;
-    // console.log(coordinate);
     res.json(board.placement(ship, new Coordinate(row, col), direction));
   } else {
     res.json('can\'t find game session');

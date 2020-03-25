@@ -87,6 +87,26 @@ class PlayerBoard {
     return this.status();
   }
 
+  getShipPluck(fun) {
+    let ships = [];
+    this.ships.forEach(fun(ships));
+    return ships;
+  }
+
+  status() {
+    let ships = this.getShipPluck(ships => 
+                  ship => 
+                    ships.push({ 
+                      name: ship.name, 
+                      place: ship.isPlace 
+                    })
+                );
+    return ships.filter(x => x.place)
+                .map(x => x.name)
+                .join(' ')
+                .concat(' are placed');
+  }
+
   // fire the coordiate to hit the ships
   attack({row, col}) {
     if(!this.isPlacementFinished) {
@@ -107,12 +127,7 @@ class PlayerBoard {
     }
     this.no_of_fire++;
     this.board[row][col] = '><';
-    return this.status();
-  }
-
-  status() {
-    let ships = [];
-    this.ships.forEach(v => ships.push({ [v.name] : v.getHit()}));
+    let ships = this.getShipPluck(ships => v => ships.push({[v.name]: v.getHit()}));
     return {
       no_of_fire : this.no_of_fire,
       no_of_hit : this.no_of_hit,
@@ -121,8 +136,7 @@ class PlayerBoard {
   }
 
   isFinished() {
-    let lifes = [];
-    this.ships.forEach(ship => lifes.push(ship.life));
+    let lifes = this.getShipPluck((lifes) => ship => lifes.push(ship.life));
     let leftedLife = lifes.reduce((carr, life) => carr + life, 0);
     return leftedLife === 0;
   }
