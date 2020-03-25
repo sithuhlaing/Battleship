@@ -86,6 +86,10 @@ class Ship {
       case SHIPS.SUBMARINE4: return SYMBOL[SHIPS.SUBMARINE4]; // 'S4';
     }
   }
+
+  getHit() {
+    return this.size() - this.life;
+  }
 }
 
 class Battleship extends Ship {

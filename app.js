@@ -6,6 +6,10 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var gameRouter = require('./routes/game');
 
+// const jsonErrorHandler = async (err, req, res, next) => {
+//   res.status(500).send({ error: err });
+// }
+
 var app = express();
 
 app.use(logger('dev'));
@@ -16,5 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/game', gameRouter);
+
+// app.use(jsonErrorHandler);
 
 module.exports = app;
