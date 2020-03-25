@@ -1,12 +1,10 @@
 import {
   range,
-  SHIPS,
-} from './player';
+} from './utils';
 
-const Direction = {
-  VERTICAL : 'vertical',
-  HORIZONTAL : 'horizontal'
-}
+import {
+  Direction
+} from './geomatics';
 
 const SYMBOL = {
   Battleship1: 'B1',
@@ -21,8 +19,20 @@ const SYMBOL = {
   Submarine4: 'S4',
 }
 
+const SHIPS = { 
+  BATTLESHIP1: 'Battleship1',
+  CRUISER1: 'Cruiser1',
+  CRUISER2: 'Cruiser2',
+  DESTROYER1: 'Destroyer1',
+  DESTROYER2: 'Destroyer2',
+  DESTROYER3: 'Destroyer3',
+  SUBMARINE1: 'Submarine1',
+  SUBMARINE2: 'Submarine2',
+  SUBMARINE3: 'Submarine3',
+  SUBMARINE4: 'Submarine4',
+}
+
 class Ship {
-  
   constructor(name) {
     if (this.constructor === Ship) {
       throw new TypeError('Abstract class "Ship" cannot be instantiated directly.'); 
@@ -39,11 +49,11 @@ class Ship {
   }
 
   hit(){
-    life--;
+    this.life--;
   }
 
   isSink(){
-    return life === 0;
+    return this.life === 0;
   }
 
   setPosition({row, col}){
@@ -108,5 +118,6 @@ export {
   Destroyer,
   Submarine,
   Direction,
-  SYMBOL
+  SYMBOL,
+  SHIPS
 }

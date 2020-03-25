@@ -1,19 +1,17 @@
 import {
   PlayerBoard, 
-  SHIPS,
-  range,
-  characterRange,
-  MAX_ROW,
-  Coordinate,
-} from '../game/player';
+} from '../game/board';
+
 import {
-  Battleship,
-  Cruiser,
-  Destroyer,
-  Submarine,
   Direction,
   SYMBOL,
+  SHIPS,
 } from '../game/ship';
+
+import {
+  Coordinate,
+} from '../game/geomatics';
+
 var assert = require('assert');
 var expect = require('chai').expect
 
@@ -54,6 +52,7 @@ describe('Battleship Game', function() {
 
     it('general test', function(){
       let player1 = new PlayerBoard();
+      console.log(player1);
 
       player1.placement(SYMBOL[SHIPS.DESTROYER1], new Coordinate(1, 'A'), Direction.HORIZONTAL);
       player1.placement(SYMBOL[SHIPS.CRUISER1], new Coordinate(1, 'D'), Direction.VERTICAL);
@@ -65,21 +64,34 @@ describe('Battleship Game', function() {
       player1.placement(SYMBOL[SHIPS.SUBMARINE3], new Coordinate(7, 'J'), Direction.VERTICAL);
       player1.placement(SYMBOL[SHIPS.SUBMARINE4], new Coordinate(8, 'A'), Direction.HORIZONTAL);
 
-      // console.log(player1.showBoard());
-      assert.equal(
-`---------------------------------
-|  D1 D1    C1       B1 B1 B1 B1 |
-|           C1                   |
-|           C1                   |
-|  S1             C2 C2 C2    D2 |
-|  S1                         D2 |
-|  S1                            |
-|                 S2          S3 |
-|  S4 S4 S4       S2          S3 |
-|                 S2          S3 |
-|                                |
----------------------------------`,
-      player1.showBoard());
+      console.log(player1.showBoard());
+//       assert.equal(
+// `---------------------------------
+// |  D1 D1    C1       B1 B1 B1 B1 |
+// |           C1                   |
+// |           C1                   |
+// |  S1             C2 C2 C2    D2 |
+// |  S1                         D2 |
+// |  S1                            |
+// |                 S2          S3 |
+// |  S4 S4 S4       S2          S3 |
+// |                 S2          S3 |
+// |                                |
+// ---------------------------------`,
+//       player1.showBoard());
+      player1.attack(new Coordinate(4, 'C'));
+      player1.attack(new Coordinate(5, 'F'));
+      player1.attack(new Coordinate(5, 'G'));
+      player1.attack(new Coordinate(6, 'B'));
+      player1.attack(new Coordinate(6, 'H'));
+      player1.attack(new Coordinate(6, 'J'));
+      player1.attack(new Coordinate(7, 'D'));
+      player1.attack(new Coordinate(7, 'J'));
+      player1.attack(new Coordinate(8, 'A'));
+      player1.attack(new Coordinate(8, 'B'));
+      player1.attack(new Coordinate(8, 'H'));
+
+      player1.showBoard();
     });
   });
 });
