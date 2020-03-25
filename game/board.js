@@ -152,6 +152,20 @@ class PlayerBoard {
       }
     console.log('---------------------------------');
   }
+
+  paserBoard(playerBoard) {
+    this.board = playerBoard.board;
+    let keys = Object.keys(playerBoard.ships);
+    keys.map(name => {
+      this.ships
+        .get(name)
+        .parse(playerBoard.ships[name]);
+    });
+    this.no_of_fire = playerBoard.no_of_fire;
+    this.no_of_hit = playerBoard.no_of_hit;
+    this.no_of_ship_placement = playerBoard.no_of_ship_placement;
+    this.isPlacementFinished = playerBoard.isPlacementFinished;
+  }
 }
 
 export {

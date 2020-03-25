@@ -48,6 +48,12 @@ class Ship {
     this.isPlace = false;
   }
 
+  parse(ship){
+    this.life = ship.life;
+    this.direction = ship.direction;
+    this.isPlace = ship.isPlace;
+  }
+
   hit(){
     this.life--;
   }
