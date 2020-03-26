@@ -11,6 +11,7 @@ import {
 import {
   range,
   characterRange,
+  mapToObj,
 } from './utils';
 
 const MAX_ROW = 10;
@@ -50,31 +51,31 @@ class PlayerBoard {
   placement(name, {row, col}, direction ) {
     let ship = this.ships.get(name);
     if(ship.isPlace) {
-      throw new TypeError('Already place it');
+      throw new Error('Already place it');
     }
     if(direction === Direction.HORIZONTAL){
       let length = col + ship.size() -1;
       if(length < MAX_ROW) {
         for(let c of range(ship.size(), col)) {
           if(this.board[row][c] !== '  '){
-            throw new TypeError('Already occupied!');
+            throw new Error('Already occupied!');
           }
           this.board[row][c] = ship.getSymbol();
         }
       } else {
-        throw new TypeError('Ship doesn\'t fixed on board');
+        throw new Error('Ship doesn\'t fixed on board');
       }
     } else {
       let length = row + ship.size();
       if(length < MAX_ROW) {
         for(let r of range(ship.size(), row)) {
           if(this.board[r][col] !== '  '){
-            throw new TypeError('Already occupied!');
+            throw new Error('Already occupied!');
           }
           this.board[r][col] = ship.getSymbol();
         }
       } else {
-        throw new TypeError('Ship doesn\'t fixed on board');
+        throw new Error('Ship doesn\'t fixed on board');
       }
     }
     ship.direction = direction;
@@ -110,11 +111,11 @@ class PlayerBoard {
   // fire the coordiate to hit the ships
   attack({row, col}) {
     if(!this.isPlacementFinished) {
-      throw new TypeError('Please wait for ship placement!');
+      throw new Error('Please wait for ship placement!');
     }
 
     if(this.board[row][col] === '><') {
-      throw new TypeError('you can\'t hit same location');
+      throw new Error('you can\'t hit same location');
     }
 
     let ship = this.ships.get(this.board[row][col]);
@@ -142,15 +143,15 @@ class PlayerBoard {
   }
 
   showBoard() {
-    console.log('---------------------------------');
+    let board = '---------------------------------\n';
     for(let r of range(MAX_ROW)){
         let line = '';
         for(let c of range(MAX_ROW)){
           line = line + ' ' + this.board[r][c];
         }
-        console.log('| ' + line + ' |');
+        board += '| ' + line + ' |\n';
       }
-    console.log('---------------------------------');
+    return board + '---------------------------------\n';
   }
 
   paserBoard(playerBoard) {
@@ -165,6 +166,10 @@ class PlayerBoard {
     this.no_of_hit = playerBoard.no_of_hit;
     this.no_of_ship_placement = playerBoard.no_of_ship_placement;
     this.isPlacementFinished = playerBoard.isPlacementFinished;
+  }
+
+  toStringifyObj() {
+    return { ...this, ships: mapToObj(this.ships) };
   }
 }
 

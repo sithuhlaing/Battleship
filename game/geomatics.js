@@ -23,7 +23,6 @@ class Coordinate{
   // row will be 1 to 10 and col will be A to J
   constructor(row, col) {
     let index = parseInt(row) - 1;
-    console.log(index);
     if(range(MAX_ROW).includes(index) && characterRange('A', 'J').includes(col)){
       this.row = index;
       this.col = convertLetterToNumber(col);
