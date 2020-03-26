@@ -1,5 +1,5 @@
 import express from 'express';
-
+import { connection } from '../db/mysql';
 import { PlayerBoard } from '../game/board';
 import { Coordinate } from '../game/geomatics';
 import { connect, getDB, getClient, getPrimaryKey } from "../db";
@@ -8,7 +8,7 @@ import 'dotenv/config';
 const router = express.Router();
 const id = '3-0250-86008-64-1';
 const board = new PlayerBoard();
-const collection = 'board';
+// const collection = 'board';
 
 
 /* GET users listing. */
@@ -17,20 +17,14 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/new', function(req, res, next) {
-  connect((err) => {
-    if(err)
-      next(err);
-    else {
-      const board = new PlayerBoard();
-      //findOneAndUpdate({_id: id}, {$set: {board}}, {returnOriginal: false}
-      getDB().collection(collection).insertOne(board, (err, r) => {
-        if(err) next(err);
-        else
-          res.send({gameId : r.insertedId});
-      });
-    }
-  });
-  // res.send('here');
+  connection.connect();
+
+  connection.query('SELECT 1 + 1 AS solution', function (err, rows, fields) {
+    if (err) throw err;
+    res.send('The solution is: ', rows[0].solution);
+  })
+
+  connection.end();
 });
 
 router.post('/:gameId/placement', function(req, res, next) {
