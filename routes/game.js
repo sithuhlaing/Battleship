@@ -1,10 +1,11 @@
 import express from 'express';
 import keygen from 'keygen';
-import { PlayerBoard } from '../game/board';
-import { Coordinate } from '../game/geomatics';
+import mysql from 'mysql';
+
 import 'dotenv/config';
 
-import mysql from 'mysql';
+import { PlayerBoard } from '../game/board';
+import { Coordinate } from '../game/geomatics';
 
 const con = mysql.createConnection({
   host: '127.0.0.1',
@@ -14,11 +15,8 @@ const con = mysql.createConnection({
 });
 
 const router = express.Router();
-const id = '3-0250-86008-64-1';
-
-// const collection = 'board';
-
 con.connect();
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('hey good news');
@@ -44,7 +42,23 @@ router.get('/:gameId', function(req, res, next) {
     const board = new PlayerBoard();
     let json = JSON.parse(result[0].board);
     board.paserBoard(json);
-    res.send(board.showBoard());
+    // console.log(board.showBoard());
+    res.write(board.showBoard());
+    res.end();
+  });
+});
+
+router.get('/:gameId/status', function(req, res, next) {
+  let sql = 'SELECT * FROM boards WHERE gameId = ?';
+  const gameId = req.params.gameId;
+  con.query(sql, [gameId], (err, result) => {
+    if(err) res.json(err);
+    if(result.length === 0)
+      res.json({err: 'can\'t find'}); 
+    const board = new PlayerBoard();
+    let json = JSON.parse(result[0].board);
+    board.paserBoard(json);
+    res.json(board.toStringifyObj());
   });
 });
 
@@ -78,10 +92,33 @@ router.post('/:gameId/placement', function(req, res, next) {
   });
 });
 
-router.post('/:gameId/placement', function(req, res, next) {
-
-
-
+// sample of post data
+// {
+// 	"coordinate": {"row": 1, "col": "I"}
+// }
+router.post('/:gameId/attack', function(req, res, next) {
+  let sql = 'SELECT * FROM boards WHERE gameId = ?';
+  const gameId = req.params.gameId;
+  con.query(sql, [gameId], (err, result) => {
+    if(err) res.json(err);
+    if(result.length === 0)
+      res.json({err: 'can\'t find'});
+    const { coordinate:{row, col} } = req.body;
+    const board = new PlayerBoard();
+    let json = JSON.parse(result[0].board);
+    board.paserBoard(json);
+    try {
+      result = board.attack(new Coordinate(row, col));
+    } catch (e) {
+      res.json({Error : 'inside error'});
+    }
+    sql = 'UPDATE boards SET board = ? WHERE gameId = ?'
+    json = JSON.stringify(board.toStringifyObj());
+    con.query(sql, [json, gameId], (err, rep) => {
+      res.json(result);
+    });
+  });
+});
 
 // con.end();
 module.exports = router;
